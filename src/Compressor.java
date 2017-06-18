@@ -313,7 +313,7 @@ public class Compressor {
 	
 	public static void main(String []args){
 
-		Encoder encoder = new Encoder("img/test.png", "img/res.fy");
+		Encoder encoder = new Encoder("img/logo.jpg", "img/res.fy");
 		encoder.execute();
 		Decoder decoder = new Decoder("img/res.fy", "img/after");
 		decoder.execute();

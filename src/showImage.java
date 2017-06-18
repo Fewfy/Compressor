@@ -23,7 +23,7 @@ public class showImage {
 		frame.setVisible(true);
 		this.R = rgb[0];
 		this.G = rgb[1];
-		this.B = rgb[0];
+		this.B = rgb[2];
 		this.height = rgb[0].length;
 		this.width = rgb[0][0].length;
 		System.out.println("height:" + height);
