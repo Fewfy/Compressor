@@ -70,14 +70,14 @@ public class Entropy {
 				{65525, 65526, 65527, 65528, 65529, 65530, 65531, 65532, 65533, 65534}
 			}
 		};	
-	private static final int BUFFER_SIZE = 1024;
+	private static final int BUFFER_SIZE = 4096;
 	private static byte[] writingBuffer;
 	private static byte[] readingBuffer;
 	private static int bitsLeftInByte;
 	private static int currentByteInBuffer;
 	private static final int BITS_IN_BYTE = 8;
 	
-	private static void flushBuffers(){
+	public static void flushBuffers(){
 		writingBuffer = new byte[BUFFER_SIZE];
 		bitsLeftInByte = BITS_IN_BYTE;
 		currentByteInBuffer = 0;
@@ -130,6 +130,8 @@ public class Entropy {
 		}
 		for(int i = length;i > 0 ;i --){
 			int bit = ((bits >> (i-1)) & 0x01) << (bitsLeftInByte -1);
+			if(currentByteInBuffer >= writingBuffer.length)
+				expandBuffer();
 			writingBuffer[currentByteInBuffer] |= bit;
 			decrementBitsToWrite();
 		}

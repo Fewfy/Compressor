@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class showImage {
+public class Image {
 	private int[][] R;
 	private int[][] G;
 	private int[][] B;
@@ -16,8 +16,8 @@ public class showImage {
 	private JFrame frame;
 	private JPanel panel;
 	
-	public showImage(int[][][] rgb,String name){
-		this.frame = new JFrame(name);
+	public Image(int[][][] rgb){
+		this.frame = new JFrame("img");
 		frame.setLayout(new BorderLayout());
 		frame.setSize(rgb[0][0].length, rgb[0].length);
 		frame.setVisible(true);

@@ -87,6 +87,18 @@ public class compressedImage {
 							convertedImage[0][i * Block.SIZE + y][j * Block.SIZE + x] =(int) (1.164 *(block[0][i][j].getDataAt(y, x) - 16) + 1.596 * (block[2][i][j].getDataAt(y, x) - 128)); //R
 							convertedImage[1][i * Block.SIZE + y][j * Block.SIZE + x] = (int)(1.164 *(block[0][i][j].getDataAt(y, x) - 16) - 0.813 * (block[2][i][j].getDataAt(y, x) - 128) - 0.392 * (block[1][i][j].getDataAt(y, x) - 128));//G
 							convertedImage[2][i * Block.SIZE + y][j * Block.SIZE + x] = (int)(1.164 * (block[0][i][j].getDataAt(y, x) - 16) + 2.017 * (block[1][i][j].getDataAt(y, x) - 128));//B
+							if(convertedImage[0][i * Block.SIZE + y][j * Block.SIZE + x] > 255)
+								convertedImage[0][i * Block.SIZE + y][j * Block.SIZE + x] = 255;
+							if(convertedImage[1][i * Block.SIZE + y][j * Block.SIZE + x] > 255)
+								convertedImage[1][i * Block.SIZE + y][j * Block.SIZE + x] = 255;
+							if(convertedImage[2][i * Block.SIZE + y][j * Block.SIZE + x] > 255)
+								convertedImage[2][i * Block.SIZE + y][j * Block.SIZE + x] = 255;
+							if(convertedImage[0][i * Block.SIZE + y][j * Block.SIZE + x] < 0)
+								convertedImage[0][i * Block.SIZE + y][j * Block.SIZE + x] = -convertedImage[0][i * Block.SIZE + y][j * Block.SIZE + x];
+							if(convertedImage[1][i * Block.SIZE + y][j * Block.SIZE + x] < 0)
+								convertedImage[1][i * Block.SIZE + y][j * Block.SIZE + x] = -convertedImage[1][i * Block.SIZE + y][j * Block.SIZE + x];
+							if(convertedImage[2][i * Block.SIZE + y][j * Block.SIZE + x] < 0)
+								convertedImage[2][i * Block.SIZE + y][j * Block.SIZE + x] = -convertedImage[2][i * Block.SIZE + y][j * Block.SIZE + x];
 						}
 					}
 				}
@@ -159,7 +171,7 @@ public class compressedImage {
 	}
 	
 	
-	public void printImage(){
+	public  void printImage(){
 		System.out.println("decode R");
 		for(int i = 0;i < height;i++){
 			for(int j = 0;j < width;j++){

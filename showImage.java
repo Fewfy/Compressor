@@ -16,8 +16,8 @@ public class showImage {
 	private JFrame frame;
 	private JPanel panel;
 	
-	public showImage(int[][][] rgb,String name){
-		this.frame = new JFrame(name);
+	public showImage(int[][][] rgb){
+		this.frame = new JFrame("img");
 		frame.setLayout(new BorderLayout());
 		frame.setSize(rgb[0][0].length, rgb[0].length);
 		frame.setVisible(true);

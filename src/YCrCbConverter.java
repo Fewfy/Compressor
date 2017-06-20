@@ -15,6 +15,12 @@ public class YCrCbConverter {
 				convertedImage[Y][i][j] = (int)(0.257 * R[i][j] + 0.564 * G[i][j] + 0.098 * B[i][j] + 16);
 				convertedImage[Cb][i][j] = (int)(-0.148*R[i][j] - 0.291 * G[i][j] + 0.439 * B[i][j] + 128);
 				convertedImage[Cr][i][j] = (int)(0.439 * R[i][j] - 0.368 * G[i][j] - 0.071*B[i][j] + 128);
+				if(convertedImage[Y][i][j] < 0)
+					convertedImage[Y][i][j] = -convertedImage[Y][i][j];
+				if(convertedImage[Cb][i][j] < 0)
+					convertedImage[Cb][i][j] = -convertedImage[Cb][i][j];
+				if(convertedImage[Cr][i][j] < 0)
+					convertedImage[Cr][i][j] = -convertedImage[Cr][i][j];
 			}
 		}
 		return convertedImage;

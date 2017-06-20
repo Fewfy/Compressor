@@ -11,8 +11,8 @@ public class Encoder extends SqueezelightConverter{
 	public static int[][] red;
 	public static int[][] green;
 	public static int[][] blue;
-	private int width;
-	private int height;
+	private static int width;
+	private static int height;
 	public Block[] redBlocklist;
 	public Block[] blueBlocklist;
 	public Block[] greenBlocklist;
@@ -48,7 +48,7 @@ public class Encoder extends SqueezelightConverter{
 		
 		for(Block[] blocklist:this.YCbCrlist){
 			for(Block block : blocklist){
-//				System.out.println("initial:");
+//				System.out.println("initial: " + block.getType());
 //				block.printData();
 				
 				DCT(block);
@@ -187,10 +187,31 @@ public class Encoder extends SqueezelightConverter{
 				}
 			}
 			int[][][] testimg = new int[3][][];
+//			System.out.println("R:");
+//			for(int y = 0;y < height;y++){
+//				for(int x = 0;x < width;x++){
+//					System.out.print(red[y][x] + " ");
+//				}
+//				System.out.println();
+//			}
+//			System.out.println("G:");
+//			for(int y = 0;y < height;y++){
+//				for(int x = 0;x < width;x++){
+//					System.out.print(green[y][x] + " ");
+//				}
+//				System.out.println();
+//			}
+//			System.out.println("B:");
+//			for(int y = 0;y < height;y++){
+//				for(int x = 0;x < width;x++){
+//					System.out.print(blue[y][x] + " ");
+//				}
+//				System.out.println();
+//			}
 			testimg[0] = red;
 			testimg[1] = green;
 			testimg[2] = blue;
-			new showImage(testimg);
+			new showImage(testimg,"initial");
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("i:"+i);
@@ -253,13 +274,36 @@ public class Encoder extends SqueezelightConverter{
 				for(int j=0;j<Block.SIZE;j++){
 					
 					//Quantify the pixel
-					double temp = alpha * quantificationTable[i][j];
-					int value = (int)(alpha == 100 ? bloc.getDataAt(i, j):
-						Math.round((bloc.getDataAt(i, j)/(alpha*quantificationTable[i][j]))));
+					int value = (int)(Math.round((bloc.getDataAt(i, j)/(alpha*quantificationTable[i][j]))));
 					bloc.setDataAt(i, j, value);
 				}
 			}
 		}
+		
+		public static void printRGB(){
+			System.out.println("R:");
+			for(int y = 0;y < height;y++){
+				for(int x = 0;x < width;x++){
+					System.out.print(red[y][x] + " ");
+				}
+				System.out.println();
+			}
+			System.out.println("G:");
+			for(int y = 0;y < height;y++){
+				for(int x = 0;x < width;x++){
+					System.out.print(green[y][x] + " ");
+				}
+				System.out.println();
+			}
+			System.out.println("B:");
+			for(int y = 0;y < height;y++){
+				for(int x = 0;x < width;x++){
+					System.out.print(blue[y][x] + " ");
+				}
+				System.out.println();
+			}
+		}
+		
 }
 
 

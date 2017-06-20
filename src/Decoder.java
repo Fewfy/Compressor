@@ -36,7 +36,7 @@ public class Decoder extends SqueezelightConverter {
 		this.image.getBlock();
 		
 		for(Block block : this.image.getBlockList()){
-//			System.out.println("decode initial:");
+//			System.out.println("decode: initial(after IDPCM)");
 //			block.printData();
 			Izigzag(block);
 			if(block.getType() == "Y"){
@@ -44,16 +44,16 @@ public class Decoder extends SqueezelightConverter {
 			}else{
 				unquantify(block, QCbCr, alpha);
 			}
-//			System.out.println("decode unquantified:");
+//			System.out.println("after quantified");
 //			block.printData();
-			
 			IDCT(block);
-//			System.out.println("decode IDCT:");
+//			System.out.println("after IDCT: " + block.getType());
 //			block.printData();
 		}
 		this.resImage = this.image.convert2RGB();
-		new showImage(this.resImage);
+//		Encoder.printRGB();
 //		this.image.printImage();
+		new showImage(this.resImage,"compressed");
 	}
 	
 	public void showImage(int[][][] img){
@@ -107,9 +107,7 @@ public class Decoder extends SqueezelightConverter {
 			for(int j=0;j<Block.SIZE;j++){
 				
 				//Calculate the unquantify value
-				double temp = alpha * quantificationTable[i][j];
-				int value = (int)(alpha == 100 ? bloc.getDataAt(i, j):
-					Math.round((bloc.getDataAt(i, j)*(alpha*quantificationTable[i][j]))));
+				int value = (int)(Math.round((bloc.getDataAt(i, j)*(alpha*quantificationTable[i][j]))));
 				//Update the bloc's value
 				bloc.setDataAt(i, j, value);
 			}

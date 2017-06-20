@@ -1,9 +1,15 @@
 import java.awt.BorderLayout;
+import java.awt.FileDialog;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -16,6 +22,7 @@ public class Compressor {
 	double[] c = {(double)(1/Math.sqrt(2)),1,1,1,1,1,1,1};
 	static JFrame frame = new JFrame();
 	public static int latency = 0;
+	private JFrame mainFrame;
 	
 	public static int[] xACMapping = {0,1,0,0,1,2,3,2,
 			1,0,0,1,2,3,4,5,
@@ -74,53 +81,10 @@ public class Compressor {
 	}
 	
 	public void startCompress() throws Exception{
-		InputStream is = new FileInputStream(this.file);
-		BufferedImage buffer = ImageIO.read(is);
-		int height = buffer.getHeight();
-		int width = buffer.getWidth();
-		long length = this.file.length();
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		
-		byte[]bytes = new byte[(int)length];
+		mainFrame = new JFrame();
+		mainFrame.setVisible(true);
 		
-		short[][] red = new short[height][width];
-		short[][] green = new short[height][width];
-		short[][] blue = new short[height][width];
-		
-		int offset = 0;
-		int numread = 0;
-		int temp = bytes.length;
-//		读取图片
-//		buffer.read(bytes);
-//		while(numread < bytes.length && (numread = is.read(bytes, offset, bytes.length-offset)) >= 0){
-//			offset += numread;
-//		}
-		
-		int ind = 0;
-		for(int i = 0;i < height;i ++){
-			for(int j = 0;j < width;j++){
-//				red[i][j] = (short)(bytes[ind] & 0xff);
-//				green[i][j] = (short)(bytes[ind + height *width] & 0xff);
-//				blue[i][j] = (short)(bytes[ind + height * width * 2] & 0xff);
-//				int pixel = 0xff000000 | (red[i][j] & 0xff) << 16 | (green[i][j] & 0xff) << 8 | (blue[i][j] & 0xff); 
-//				image.setRGB(j, i, pixel);
-//				ind ++;	
-				int pixel = buffer.getRGB(i, j);
-				red[i][j] = (short)((pixel & 0xff0000) >> 16);
-				green[i][j] = (short)((pixel & 0xff00) >> 8);
-				blue[i][j] = (short)(pixel & 0xff);
-			}
-		}
-		
-		double [][][] reddctencode = encodeDCT(red, width, height);
-		double [][][] greendctencode = encodeDCT(green, width, height);
-		double [][][] bluedctencode = encodeDCT(blue, width, height);
-		
-		short [][][] reddecode = decodeDCT(reddctencode, width, height);
-		short [][][] greendecode = decodeDCT(greendctencode, width, height);
-		short [][][] bluedecode = decodeDCT(bluedctencode, width, height);
-		
-		reconstructImage(reddecode, greendecode, bluedecode, width, height);
 	}
 	
 	public short[][][] decodeDCT(double[][][] encodedBlocks, int w, int h)
@@ -262,12 +226,7 @@ public class Compressor {
 						}
 					}
 					dctRes = dct(pixelBlock);
-//					for(y = 0;y < 8;y ++){
-//						for(x = 0; x < 8;x ++){
-//							System.out.print(dctRes[y][x] + ",");
-//						}
-//						System.out.println();
-//					}
+
 					quantizeValue[num++] = quantize(dctRes);
 				}
 			}
@@ -312,10 +271,33 @@ public class Compressor {
 	}
 	
 	public static void main(String []args){
-
-		Encoder encoder = new Encoder("img/logo.jpg", "img/res.fy");
-		encoder.execute();
-		Decoder decoder = new Decoder("img/res.fy", "img/after");
-		decoder.execute();
+	
+		JFrame mainFrame = new JFrame();
+		mainFrame.setLayout(new FlowLayout());
+		mainFrame.setBounds(300,200,500,400);
+		JButton openFile = new JButton("打开文件");
+		openFile.setSize(50, 30);
+//		JButton execute = new JButton("execute");
+//		execute.setSize(50, 30);
+		mainFrame.add(openFile);
+//		mainFrame.add(execute);
+		mainFrame.setVisible(true);
+		openFile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				FileDialog fileDialog = new FileDialog(mainFrame, "打开图片", FileDialog.LOAD);
+				fileDialog.setVisible(true);
+				String dirName = fileDialog.getDirectory();
+				String fileName = fileDialog.getFile();
+				String fullFile = dirName + fileName;
+				Entropy.flushBuffers();
+				Encoder encoder = new Encoder(fullFile, "img/compressedImage");
+				encoder.execute();
+				Decoder decoder = new Decoder("img/compressedImage", "img/after");
+				decoder.execute();
+			}
+		});
 	}
 }
